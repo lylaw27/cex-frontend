@@ -1,7 +1,7 @@
 import Link from "next/link";
 import GithubIcon from "./githubicon";
 
-export default function Navigation({connect, address}) {
+export default function Navigation({connect, address}:{connect:()=>Promise<string|undefined>, address:string | undefined}) {
     return (
         <div className="container mx-auto py-6">
             <div className="flex justify-between items-center">
