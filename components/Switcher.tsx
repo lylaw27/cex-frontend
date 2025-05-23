@@ -1,5 +1,6 @@
+import { Dispatch, SetStateAction } from "react"
 
-const Switcher = ({isLimit,setIsLimit}) => {
+const Switcher = ({isLimit,setIsLimit}:{isLimit: boolean,setIsLimit:Dispatch<SetStateAction<boolean>>}) => {
 
     const handleCheckboxChange = () => {
         setIsLimit(!isLimit)
