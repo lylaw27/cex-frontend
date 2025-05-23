@@ -1,7 +1,11 @@
+import { Limit, Trade, UserInfo } from '@/Types/types';
 import {Client} from '@stomp/stompjs'
+import { Dispatch, SetStateAction } from 'react';
 
 
-const startWebSocket = (add,setUserInfo,setAsks,setBuys,setTrades) =>{
+const startWebSocket = (address:string | undefined,
+     setUserInfo:Dispatch<SetStateAction<UserInfo | undefined>> ,
+     setAsks:Dispatch<SetStateAction<Limit[]>> | null,setBuys:Dispatch<SetStateAction<Limit[]>> | null,setTrades:Dispatch<SetStateAction<Trade[]|undefined>>) =>{
 
     const client = new Client({
         brokerURL: 'ws://localhost:8080/ws',
@@ -23,12 +27,11 @@ const startWebSocket = (add,setUserInfo,setAsks,setBuys,setTrades) =>{
             client.subscribe("/orderbook/user", message =>{
                 setUserInfo(JSON.parse(message.body));
             })
-            client.publish({destination: "/app/getuser", body:add});
+            client.publish({destination: "/app/getuser", body:address});
         },
     });
     console.log("connected!");
     client.activate();
-    console.log(add);
     return client;
 }
 
