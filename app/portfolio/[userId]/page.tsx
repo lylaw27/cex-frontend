@@ -1,13 +1,13 @@
 'use client'
 import useEthereum from "@/hooks/useEthereum";
-import {useEffect, useState} from "react";
+import {JSX, useEffect, useState} from "react";
 import AssetInfo from "@/components/AssetInfo";
 import startWebSocket from "@/hooks/websocket";
 import Navigation from "@/components/Navigation";
 import {Trade, Order, UserInfo} from "@/Types/types";
 
 
-const Card = ({children,title}) =>{
+const Card = ({children,title}:{children: JSX.Element, title:string}) =>{
     return (
         <div className="p-6 bg-teal-400 rounded-xl">
             <h1 className="text-grey-900 font-bold text-2xl mb-3 text-center">{title}</h1>
@@ -111,9 +111,9 @@ export default function Portfolio() {
                                         ACTION
                                     </div>
                                 </div>
-                            </div>
                         {userInfo == null ? <></>:
                             <MyOrders cancelOrder={cancelOrder} orders={userInfo.orders}/>}
+                        </div>
                     </Card>
                 </div>
             </div>
