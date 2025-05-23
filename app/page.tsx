@@ -56,7 +56,7 @@ const MarketTrades = ({trades}:{trades: Trade[]}) =>{
 }
 
 export default function Home() {
-    const {provider,connect,address,balance, getBalance} = useEthereum();
+    const {connect,address,balance, getBalance} = useEthereum();
     const [asks,setAsks] = useState<Limit[]>([]);
     const [buys,setBuys] = useState<Limit[]>([]);
     const [trades,setTrades] = useState<Trade[]>();
