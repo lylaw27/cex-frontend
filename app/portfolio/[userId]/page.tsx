@@ -16,7 +16,7 @@ const Card = ({children,title}) =>{
     )
 }
 
-const MyOrders = ({cancelOrder,orders}:{cancelOrder: any,orders: Order[]}) =>{
+const MyOrders = ({cancelOrder,orders}:{cancelOrder: (arg0: string)=>void,orders: Order[]}) =>{
     const indents = [];
     for(let i=orders.length-1;i>=0;i--){
         indents.push(
@@ -49,7 +49,7 @@ const MyOrders = ({cancelOrder,orders}:{cancelOrder: any,orders: Order[]}) =>{
 
 export default function Portfolio() {
     const {connect,address,balance, getBalance} = useEthereum();
-    const [orders, setOrders] = useState<Order[]>([]);
+    // const [orders, setOrders] = useState<Order[]>([]);
     const [trades,setTrades] = useState<Trade[]>();
     const [userInfo, setUserInfo] = useState<UserInfo>();
 
@@ -69,18 +69,18 @@ export default function Portfolio() {
         }
     }
 
-    const getUserInfo = async(add:string | undefined)=>{
-        if(add == "" || add == undefined){
-            alert("Please First Connect Your Wallet");
-            return;
-        }
-        const url = `http://127.0.0.1:8080/order/${add}`;
-        return fetch(url,{method: 'GET',})
-        .then((res)=>res.json())
-        .then((userData)=>{
-            setOrders(userData.orders)
-        });
-    }
+    // const getUserInfo = async(add:string | undefined)=>{
+    //     if(add == "" || add == undefined){
+    //         alert("Please First Connect Your Wallet");
+    //         return;
+    //     }
+    //     const url = `http://127.0.0.1:8080/order/${add}`;
+    //     return fetch(url,{method: 'GET',})
+    //     .then((res)=>res.json())
+    //     .then((userData)=>{
+    //         setOrders(userData.orders)
+    //     });
+    // }
 
     return (
         <div className="container mx-auto tex-2xl">
