@@ -55,7 +55,7 @@ export default function Portfolio() {
 
     useEffect(() => {
         connect()
-        .then((add)=>startWebSocket(add,setUserInfo,null,null,setTrades))
+        .then((address)=>startWebSocket(address,setUserInfo,null,null,setTrades))
         .then(getBalance)
     }, [address]);
 
