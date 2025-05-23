@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {ethers, AbstractProvider,BrowserProvider, Signer} from "ethers";
 
+declare let window: any;
 
 const useEthereum = () => {
     const [address, setAddress] = useState<string>("");
@@ -15,9 +16,7 @@ const useEthereum = () => {
             setBalance(balance);
         }
     }
-
     const connect = async() => {
-
         if (window.ethereum) {
             const provider = new ethers.WebSocketProvider("ws://127.0.0.1:8545");
             setProvider(provider);
