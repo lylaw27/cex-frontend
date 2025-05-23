@@ -1,6 +1,6 @@
 'use client'
 import useEthereum from "@/hooks/useEthereum";
-import {useEffect, useState} from "react";
+import {JSX, useEffect, useState} from "react";
 import startWebSocket from "@/hooks/websocket";
 import Switcher from "@/components/Switcher";
 import AssetInfo from "@/components/AssetInfo";
@@ -11,7 +11,7 @@ const Spacer = () =>{
     return <div className="py-2"></div>
 }
 
-const Card = ({children,title}) =>{
+const Card = ({children,title}:{children: JSX.Element, title:string}) =>{
     return (
         <div className="p-6 bg-teal-400 rounded-xl">
             <h1 className="text-grey-900 font-bold text-2xl mb-3 text-center">{title}</h1>
@@ -157,6 +157,7 @@ export default function Home() {
                           </div>
                       </Card>
                       <Card title="Trades">
+                        <>
                           <h1 className="text-xl text-center">
                               Current Price: {(trades === undefined || trades.length == 0 ? <div>Data Unavailable</div>: <div> {trades[0].price}</div>)}
                           </h1>
@@ -169,6 +170,7 @@ export default function Home() {
                                   </div>
                               </div>
                           {(trades === undefined || trades.length == 0 ? <div>Data Unavailable</div>: <MarketTrades trades={trades}/>)}
+                        </>
                       </Card>
                       <Card title="Place Order">
                           <div>
