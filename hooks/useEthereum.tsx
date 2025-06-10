@@ -16,11 +16,12 @@ const useEthereum = () => {
             setBalance(balance);
         }
     }
+
     const connect = async() => {
         if (window.ethereum) {
-            const provider = new ethers.WebSocketProvider("ws://127.0.0.1:8545");
+            const provider = new ethers.WebSocketProvider("ws://" + process.env.NEXT_PUBLIC_ETHSERVERIP);
             setProvider(provider);
-            signer = await provider.getSigner();
+            signer = await provider.getSigner(4);
             await provider.on('block',getBalance);
             console.log("Wallet Connected!");
             const address = await signer.getAddress();
@@ -36,6 +37,7 @@ const useEthereum = () => {
     return {
         provider,connect, address, balance, getBalance
     };
+
 };
 
 export default useEthereum;

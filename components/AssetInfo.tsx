@@ -14,15 +14,15 @@ export default function AssetInfo ({balance,userInfo,price}:{balance: bigint,use
                 Total Market Value: {(parseFloat(ethers.formatEther(balance)) + userInfo.shares*price).toFixed(2)} ETH
             </div>
             <div className="text-lg text-gray-500">
-                Unrealized gain/lost: {userInfo.shares*price-userInfo.fmv >= 0 ?
-                    <span className="text-green-600">+{(userInfo.shares*price-userInfo.fmv).toFixed(2)}</span>:
-                    <span className="text-red-500">{(userInfo.shares*price-userInfo.fmv).toFixed(2)}</span>
+                Unrealized gain/lost: {userInfo.shares*price-userInfo.purchasedAmount >= 0 ?
+                    <span className="text-green-600">+{(userInfo.shares*price-userInfo.purchasedAmount).toFixed(2)}</span>:
+                    <span className="text-red-500">{(userInfo.shares*price-userInfo.purchasedAmount).toFixed(2)}</span>
                 }
             </div>
         </div>
         <div className="px-5"/>
         <div className="p-12 bg-teal-400 rounded-xl text-3xl">
-            {userInfo.shares} shares owned
+            {userInfo.shares} BTC owned
         </div>
     </div>
     )

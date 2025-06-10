@@ -6,6 +6,8 @@ import Switcher from "@/components/Switcher";
 import AssetInfo from "@/components/AssetInfo";
 import Navigation from "@/components/Navigation";
 import {Trade, Limit, UserInfo} from "@/Types/types";
+import PriceChart from "@/components/chart";
+import {ApexOptions} from "apexcharts";
 
 const Spacer = () =>{
     return <div className="py-2"></div>
@@ -24,13 +26,13 @@ const Card = ({children,title}:{children: JSX.Element, title:string}) =>{
 const Orderbook = ({limits}:{limits: Limit[]}) =>{
     const indents = [];
     let i=0;
-    while(i<10 && i<limits.length){
+    while(i<30 && i<limits.length){
         indents.push(<div key={i} className="grid grid-cols-2 gap-4 place-items-center">
             <div>
-                {limits[i].totalVolume}
+                {limits[i].totalVolume.toFixed(2)}
             </div>
             <div>
-                {limits[i].price}
+                {limits[i].price.toFixed(2)}
             </div>
         </div>)
         i++;
@@ -41,13 +43,13 @@ const Orderbook = ({limits}:{limits: Limit[]}) =>{
 const MarketTrades = ({trades}:{trades: Trade[]}) =>{
     const indents = [];
     let i=0;
-    while(i<10 && i<trades.length){
+    while(i<30 && i<trades.length){
         indents.push(<div key={i} className="grid grid-cols-2 gap-4 place-items-center">
             <div>
-                {trades[i].price}
+                {trades[i].price.toFixed(2)}
             </div>
             <div>
-                {trades[i].size}
+                {trades[i].size.toFixed(2)}
             </div>
         </div>)
         i++;
@@ -59,26 +61,48 @@ export default function Home() {
     const {connect,address,balance, getBalance} = useEthereum();
     const [asks,setAsks] = useState<Limit[]>([]);
     const [buys,setBuys] = useState<Limit[]>([]);
-    const [trades,setTrades] = useState<Trade[]>();
+    const [trades,setTrades] = useState<Trade[]>([]);
     const [orderSize,setOrderSize] = useState<string>("0");
     const [orderPrice,setOrderPrice]  = useState<string>("0");
     const [isLimit, setIsLimit] = useState(false);
     const [userInfo, setUserInfo] = useState<UserInfo>();
+    const [candles, setCandles] = useState<ApexOptions>({
+            series: [{
+                data: []
+            }],
+            chart: {
+                type: 'candlestick',
+                height: 350,
+                animations: {
+                    enabled: false,
+                },
+            },
+            title: {
+                text: 'ExchangeGG Chart',
+                align: 'left'
+            },
+            xaxis: {
+                type: 'datetime'
+            },
+            yaxis: {
+                tooltip: {
+                    enabled: true
+                }
+            }
+
+    });
 
     useEffect(() => {
         connect()
             .then((add)=> {
-                startWebSocket(add,setUserInfo,setAsks,setBuys,setTrades);
+                startWebSocket(add,setUserInfo,setAsks,setBuys,setTrades,setCandles);
             })
             .then(getBalance);
-        // if(provider){
-        //     provider.on('block',getBalance);
-        // }
     }, [address]);
 
 
     const placeOrder = async(bid:boolean)=>{
-        const url = 'http://127.0.0.1:8080/order';
+        const url = 'https://' +  process.env.NEXT_PUBLIC_ORDERBOOKIP + '/order';
         let orderType = "MARKET";
         if(isLimit){
             orderType = "LIMIT";
@@ -104,7 +128,7 @@ export default function Home() {
             return;
         }
         if(userInfo == null || !bid && parseFloat(orderSize)>userInfo.shares){
-            alert("Insufficient Shares!");
+            alert("Insufficient BTC!");
             return;
         }
         await fetch(url,{
@@ -121,8 +145,9 @@ export default function Home() {
       <div className="container mx-auto tex-2xl">
         <Navigation connect={connect} address={address}/>
           <div className="container mx-auto">
-              {trades == null || balance == null || userInfo == null ? <></> : <AssetInfo balance={balance} userInfo={userInfo} price={trades[0].price}/>}
-                  <div className="flex space-x-10">
+              {trades.length === 0 || balance == null || userInfo == null ? <></> : <AssetInfo balance={balance} userInfo={userInfo} price={parseFloat(trades[0].price.toFixed(2))}/>}
+              <PriceChart candles={candles}/>
+              <div className="flex space-x-10 flex-wrap gap-5">
                       <Card title="Orderbook">
                           <div className="flex">
                               <div>
@@ -157,9 +182,9 @@ export default function Home() {
                           </div>
                       </Card>
                       <Card title="Trades">
-                        <>
+                          <>
                           <h1 className="text-xl text-center">
-                              Current Price: {(trades === undefined || trades.length == 0 ? <div>Data Unavailable</div>: <div> {trades[0].price}</div>)}
+                              Current Price: {(trades.length == 0 ? <div>Data Unavailable</div>: <div> {trades[0].price.toFixed(2)}</div>)}
                           </h1>
                               <div className="grid grid-cols-2 gap-4 p-2 place-items-center">
                                   <div>
@@ -169,8 +194,8 @@ export default function Home() {
                                       AMOUNT
                                   </div>
                               </div>
-                          {(trades === undefined || trades.length == 0 ? <div>Data Unavailable</div>: <MarketTrades trades={trades}/>)}
-                        </>
+                          {(trades.length == 0 ? <div>Data Unavailable</div>: <MarketTrades trades={trades}/>)}
+                          </>
                       </Card>
                       <Card title="Place Order">
                           <div>

@@ -21,7 +21,15 @@ export type Trade = {
 
 export type UserInfo = {
     shares: number;
-    fmv: number;
+    purchasedAmount: number;
     address: string;
     orders: Order[];
+}
+
+export type Candle = {
+    timestamp: number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
 }

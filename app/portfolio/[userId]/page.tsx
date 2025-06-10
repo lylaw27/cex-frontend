@@ -28,7 +28,7 @@ const MyOrders = ({cancelOrder,orders}:{cancelOrder: (arg0: string)=>void,orders
                 {(Math.round((orders[i].orderSize - orders[i].size) * 100) / 100).toFixed(2)}
             </div>
             <div>
-                {orders[i].price}
+                {orders[i].price.toFixed(2)}
             </div>
             <div>
                 {orders[i].bid ? "BUY" : "SELL"}
@@ -49,44 +49,29 @@ const MyOrders = ({cancelOrder,orders}:{cancelOrder: (arg0: string)=>void,orders
 
 export default function Portfolio() {
     const {connect,address,balance, getBalance} = useEthereum();
-    // const [orders, setOrders] = useState<Order[]>([]);
-    const [trades,setTrades] = useState<Trade[]>();
+    const [trades,setTrades] = useState<Trade[]>([]);
     const [userInfo, setUserInfo] = useState<UserInfo>();
 
     useEffect(() => {
         connect()
-        .then((address)=>startWebSocket(address,setUserInfo,null,null,setTrades))
+        .then((address)=>startWebSocket(address,setUserInfo,null,null,setTrades,null))
         .then(getBalance)
     }, [address]);
 
     const cancelOrder = async(orderId:string)=>{
-        const url = `http://localhost:8080/book/ETH/${orderId}`;
+        const url = 'https://' + process.env.NEXT_PUBLIC_ORDERBOOKIP + `/book/ETH/${orderId}`;
         if(confirm("Cancel Order?")){
         await fetch(url,{method: 'DELETE',})
             .then((res)=>res.text())
             .then((msg)=>alert(msg))
-        // await getUserInfo(address)
         }
     }
-
-    // const getUserInfo = async(add:string | undefined)=>{
-    //     if(add == "" || add == undefined){
-    //         alert("Please First Connect Your Wallet");
-    //         return;
-    //     }
-    //     const url = `http://127.0.0.1:8080/order/${add}`;
-    //     return fetch(url,{method: 'GET',})
-    //     .then((res)=>res.json())
-    //     .then((userData)=>{
-    //         setOrders(userData.orders)
-    //     });
-    // }
 
     return (
         <div className="container mx-auto tex-2xl">
             <Navigation connect={connect} address={address}/>
             <div className="container mx-auto">
-                {trades == null || balance == null || userInfo == null ? <></> : <AssetInfo balance={balance} userInfo={userInfo} price={trades[0].price}/>}
+                {trades == null || balance == null || userInfo == null ? <></> : <AssetInfo balance={balance} userInfo={userInfo} price={parseFloat(trades[0].price.toFixed(2))}/>}
                 <div className="flex space-x-10">
                     <Card title="My Orders">
                             <div>
