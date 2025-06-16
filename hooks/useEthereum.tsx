@@ -19,7 +19,7 @@ const useEthereum = () => {
 
     const connect = async() => {
         if (window.ethereum) {
-            const provider = new ethers.WebSocketProvider("ws://" + process.env.NEXT_PUBLIC_ETHSERVERIP);
+            const provider = new ethers.WebSocketProvider("wss://" + process.env.NEXT_PUBLIC_ETHSERVERIP);
             setProvider(provider);
             signer = await provider.getSigner(4);
             await provider.on('block',getBalance);
