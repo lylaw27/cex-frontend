@@ -10,7 +10,7 @@ const startWebSocket = (address:string | undefined,
      setCandles:Dispatch<SetStateAction<ApexOptions>> | null) =>{
 
     const client = new Client({
-        brokerURL: 'wss://' + process.env.NEXT_PUBLIC_ORDERBOOKIP + '/ws',
+        brokerURL: 'ws://' + process.env.NEXT_PUBLIC_ORDERBOOKIP + '/ws',
         onConnect: ()=>{
             if(setAsks){
                 client.subscribe('/orderbook/asks', message =>{

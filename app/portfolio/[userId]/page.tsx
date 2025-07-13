@@ -59,7 +59,7 @@ export default function Portfolio() {
     }, [address]);
 
     const cancelOrder = async(orderId:string)=>{
-        const url = 'https://' + process.env.NEXT_PUBLIC_ORDERBOOKIP + `/book/ETH/${orderId}`;
+        const url = 'http://' + process.env.NEXT_PUBLIC_ORDERBOOKIP + `/book/ETH/${orderId}`;
         if(confirm("Cancel Order?")){
         await fetch(url,{method: 'DELETE',})
             .then((res)=>res.text())
@@ -71,7 +71,7 @@ export default function Portfolio() {
         <div className="container mx-auto tex-2xl">
             <Navigation connect={connect} address={address}/>
             <div className="container mx-auto">
-                {trades == null || balance == null || userInfo == null ? <></> : <AssetInfo balance={balance} userInfo={userInfo} price={parseFloat(trades[0].price.toFixed(2))}/>}
+                {trades.length === 0 || balance == null || userInfo == null ? <></> : <AssetInfo balance={balance} userInfo={userInfo} price={parseFloat(trades[0].price.toFixed(2))}/>}
                 <div className="flex space-x-10">
                     <Card title="My Orders">
                             <div>

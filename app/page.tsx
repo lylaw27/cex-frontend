@@ -102,7 +102,7 @@ export default function Home() {
 
 
     const placeOrder = async(bid:boolean)=>{
-        const url = 'https://' +  process.env.NEXT_PUBLIC_ORDERBOOKIP + '/order';
+        const url = 'http://' +  process.env.NEXT_PUBLIC_ORDERBOOKIP + '/order';
         let orderType = "MARKET";
         if(isLimit){
             orderType = "LIMIT";
