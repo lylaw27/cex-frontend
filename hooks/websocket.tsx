@@ -8,9 +8,9 @@ const startWebSocket = (address:string | undefined,
      setUserInfo:Dispatch<SetStateAction<UserInfo | undefined>> ,
      setAsks:Dispatch<SetStateAction<Limit[]>> | null,setBuys:Dispatch<SetStateAction<Limit[]>> | null,setTrades:Dispatch<SetStateAction<Trade[]>>,
      setCandles:Dispatch<SetStateAction<ApexOptions>> | null) =>{
-
+    const wsProtocol = process.env.NEXT_PUBLIC_ENV === "dev" ? "ws://" : "wss://";
     const client = new Client({
-        brokerURL: 'ws://' + process.env.NEXT_PUBLIC_ORDERBOOKIP + '/ws',
+        brokerURL: wsProtocol + process.env.NEXT_PUBLIC_ORDERBOOKIP + '/ws',
         onConnect: ()=>{
             if(setAsks){
                 client.subscribe('/orderbook/asks', message =>{

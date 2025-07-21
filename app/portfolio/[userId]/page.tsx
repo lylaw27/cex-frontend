@@ -57,7 +57,7 @@ export default function Portfolio() {
     }, [address]);
 
     const cancelOrder = async(orderId:string)=>{
-        const url = 'http://' + process.env.NEXT_PUBLIC_ORDERBOOKIP + `/book/ETH/${orderId}`;
+        const url = 'https://' + process.env.NEXT_PUBLIC_ORDERBOOKIP + `/book/ETH/${orderId}`;
         if(confirm("Cancel Order?")){
         await fetch(url,{method: 'DELETE',})
             .then((res)=>res.text())
