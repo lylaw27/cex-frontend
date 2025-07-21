@@ -1,5 +1,5 @@
 'use client'
-import useEthereum from "@/hooks/useEthereum";
+
 import {JSX, useEffect, useState} from "react";
 import AssetInfo from "@/components/AssetInfo";
 import startWebSocket from "@/hooks/websocket";
@@ -48,14 +48,12 @@ const MyOrders = ({cancelOrder,orders}:{cancelOrder: (arg0: string)=>void,orders
 }
 
 export default function Portfolio() {
-    const {connect,address,balance, getBalance} = useEthereum();
+    const address = process.env.NEXT_PUBLIC_WALLET_ADDRESS;
     const [trades,setTrades] = useState<Trade[]>([]);
     const [userInfo, setUserInfo] = useState<UserInfo>();
 
     useEffect(() => {
-        connect()
-        .then((address)=>startWebSocket(address,setUserInfo,null,null,setTrades,null))
-        .then(getBalance)
+        startWebSocket(address,setUserInfo,null,null,setTrades,null)
     }, [address]);
 
     const cancelOrder = async(orderId:string)=>{
@@ -69,9 +67,9 @@ export default function Portfolio() {
 
     return (
         <div className="container mx-auto tex-2xl">
-            <Navigation connect={connect} address={address}/>
+            <Navigation address={address}/>
             <div className="container mx-auto">
-                {trades.length === 0 || balance == null || userInfo == null ? <></> : <AssetInfo balance={balance} userInfo={userInfo} price={parseFloat(trades[0].price.toFixed(2))}/>}
+                {trades.length === 0 || userInfo == null ? <></> : <AssetInfo userInfo={userInfo} price={parseFloat(trades[0].price.toFixed(2))}/>}
                 <div className="flex space-x-10">
                     <Card title="My Orders">
                             <div>

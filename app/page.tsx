@@ -1,5 +1,5 @@
 'use client'
-import useEthereum from "@/hooks/useEthereum";
+
 import {JSX, useEffect, useState} from "react";
 import startWebSocket from "@/hooks/websocket";
 import Switcher from "@/components/Switcher";
@@ -58,7 +58,7 @@ const MarketTrades = ({trades}:{trades: Trade[]}) =>{
 }
 
 export default function Home() {
-    const {connect,address,balance, getBalance} = useEthereum();
+    const address = process.env.NEXT_PUBLIC_WALLET_ADDRESS;
     const [asks,setAsks] = useState<Limit[]>([]);
     const [buys,setBuys] = useState<Limit[]>([]);
     const [trades,setTrades] = useState<Trade[]>([]);
@@ -93,11 +93,7 @@ export default function Home() {
     });
 
     useEffect(() => {
-        connect()
-            .then((add)=> {
-                startWebSocket(add,setUserInfo,setAsks,setBuys,setTrades,setCandles);
-            })
-            .then(getBalance);
+        startWebSocket(address,setUserInfo,setAsks,setBuys,setTrades,setCandles);
     }, [address]);
 
 
@@ -123,7 +119,7 @@ export default function Home() {
             alert("Please First Connect Your Wallet");
             return;
         }
-        if(bid && balance < parseFloat(orderSize)*parseFloat(orderPrice)){
+        if(userInfo && bid && userInfo.balance < parseFloat(orderSize)*parseFloat(orderPrice)){
             alert("Insufficient Funds!");
             return;
         }
@@ -143,9 +139,9 @@ export default function Home() {
 
     return (
       <div className="container mx-auto tex-2xl">
-        <Navigation connect={connect} address={address}/>
+        <Navigation address={address}/>
           <div className="container mx-auto">
-              {trades.length === 0 || balance == null || userInfo == null ? <></> : <AssetInfo balance={balance} userInfo={userInfo} price={parseFloat(trades[0].price.toFixed(2))}/>}
+              {trades.length === 0 || userInfo == null ? <></> : <AssetInfo userInfo={userInfo} price={parseFloat(trades[0].price.toFixed(2))}/>}
               <PriceChart candles={candles}/>
               <div className="flex space-x-10 flex-wrap gap-5">
                       <Card title="Orderbook">

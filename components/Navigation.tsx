@@ -1,7 +1,7 @@
 import Link from "next/link";
 import GithubIcon from "./githubicon";
 
-export default function Navigation({connect, address}:{connect:()=>Promise<string|undefined>, address:string | undefined}) {
+export default function Navigation({address}:{address:string | undefined}) {
     return (
         <div className="container mx-auto py-6">
             <div className="flex justify-between items-center">
@@ -17,7 +17,7 @@ export default function Navigation({connect, address}:{connect:()=>Promise<strin
                     <Link href="https://github.com/lylaw27/Crypto-Exchange-Java">
                         <GithubIcon/>
                     </Link>
-                    {address ? <div>{address}</div> : <button onClick={connect} className="p-3 bg-blue-500 font-bold rounded-lg text-white">Connect</button>}
+                    {address ? <div>{address}</div> : <button className="p-3 bg-blue-500 font-bold rounded-lg text-white">Connect</button>}
                 </div>
             </div>
         </div>

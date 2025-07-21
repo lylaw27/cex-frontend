@@ -24,6 +24,7 @@ export type UserInfo = {
     purchasedAmount: number;
     address: string;
     orders: Order[];
+    balance: number;
 }
 
 export type Candle = {
